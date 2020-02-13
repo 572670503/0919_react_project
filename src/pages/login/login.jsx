@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import axios from "axios"
 import { Form, Icon, Input, Button,} from 'antd'
 import logo from "./img/logo.png"
 import "./css/login.less"
@@ -27,7 +28,12 @@ class Login extends Component {
         //获取所有表单中的用户输入
         this.props.form.validateFields((err, values) => {
           if (!err) {
-            console.log('Received values of form: ', values);
+         const{username,password}=values
+        //如果没有错误就发送请求  values 说明 它是一个对象 里面包含了username 和 password
+           axios.post("http://localhost:3000/login",`username=${username}&password=${password}`).then(
+               response=>{console.log(response.data)},
+               error =>{console.log(error)}
+           )
           }
         });
     }
