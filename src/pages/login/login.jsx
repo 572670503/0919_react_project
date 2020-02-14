@@ -1,8 +1,10 @@
 import React, { Component } from 'react'
 import axios from "axios"
+import myAxios from "../../api/myAxios"
 import { Form, Icon, Input, Button,} from 'antd'
 import logo from "./img/logo.png"
 import "./css/login.less"
+import {reqLogin} from "../../api/index"
 const {Item}=Form
 class Login extends Component {
     passwordValidator=(rule, value, callback)=>{
@@ -26,14 +28,22 @@ class Login extends Component {
         //阻止表单的提交的默认行为（因为我们是通过ajax请求发送）
         event.preventDefault()
         //获取所有表单中的用户输入
-        this.props.form.validateFields((err, values) => {
+        this.props.form.validateFields(async(err, values) => {
           if (!err) {
-         const{username,password}=values
+           const{username,password}=values
+         let result = await reqLogin(username,password)
+         console.log(result)
+        // const{username,password}=values
         //如果没有错误就发送请求  values 说明 它是一个对象 里面包含了username 和 password
-           axios.post("http://localhost:3000/login",`username=${username}&password=${password}`).then(
-               response=>{console.log(response.data)},
-               error =>{console.log(error)}
-           )
+        //    myAxios.post("http://localhost:3000/login",values).then(
+        //        response=>{
+        //            const status = response.status
+        //            const msg = response.msg
+        //            if(status===0){
+                     
+        //            }else alert(msg)
+        //        }
+        //      )
           }
         });
     }
