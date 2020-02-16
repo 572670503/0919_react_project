@@ -1,11 +1,22 @@
 import React, { Component } from 'react'
-import axios from "axios"
-import myAxios from "../../api/myAxios"
-import { Form, Icon, Input, Button,} from 'antd'
+// import axios from "axios"
+// import myAxios from "../../api/myAxios"
+import { Form, Icon, Input, Button,message} from 'antd'
 import logo from "./img/logo.png"
 import "./css/login.less"
 import {reqLogin} from "../../api/index"
+import {connect} from "react-redux"
+import {createSaveUserInfoAction} from "../../redux/actions/login"
+// import {Redirect} from "react-router-dom"
+import check from "../check/check"
 const {Item}=Form
+
+@connect(
+    (state)=>({userInfo:state.userInfo}),
+    {saveUserInfo:createSaveUserInfoAction}
+)
+@Form.create() 
+@check
 class Login extends Component {
     passwordValidator=(rule, value, callback)=>{
         //1.value 是用户的输入
@@ -29,10 +40,20 @@ class Login extends Component {
         event.preventDefault()
         //获取所有表单中的用户输入
         this.props.form.validateFields(async(err, values) => {
+        //如果输入的密码和用户名都没有错误，就就发送请求
           if (!err) {
            const{username,password}=values
          let result = await reqLogin(username,password)
-         console.log(result)
+         const{status,data,msg}=result
+          if(status===0){
+              message.success("登录成功")
+              //向redux中保存用户信息
+              this.props.saveUserInfo(data)
+              //跳转到admin页面
+              this.props.history.replace("/admin")
+          }else{
+              message.error(msg)
+          }
         // const{username,password}=values
         //如果没有错误就发送请求  values 说明 它是一个对象 里面包含了username 和 password
         //    myAxios.post("http://localhost:3000/login",values).then(
@@ -48,6 +69,8 @@ class Login extends Component {
         });
     }
     render() {
+        // const{isLogin}= this.props.userInfo
+        // if(isLogin) return <Redirect to="/admin"/>
         const { getFieldDecorator } = this.props.form;
         return (
             <div id="login">
@@ -96,4 +119,5 @@ class Login extends Component {
         )
     }
 }
-export default Form.create()(Login); 
+
+export default Login
