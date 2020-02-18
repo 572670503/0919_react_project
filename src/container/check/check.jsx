@@ -15,9 +15,8 @@ import {Redirect} from "react-router-dom"
         // 2. 用户如果登录了，用户还想看login页面，不让看，跳转到admin页面
         render(){
             const{isLogin} = this.props
-            const{pathname}= this.props.location//当前的页面
-           
-            if(!isLogin && pathname==="/admin"){
+            const{pathname}= this.props.location//当前的页面    
+            if(!isLogin && pathname!=="/login"){
                 return  <Redirect to="/login"/>
             }
             if(isLogin && pathname==="/login"){

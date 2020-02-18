@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 // import axios from "axios"
 // import myAxios from "../../api/myAxios"
 import { Form, Icon, Input, Button,message} from 'antd'
-import logo from "./img/logo.png"
+import logo from "../../static/imgs/logo.png"
 import "./css/login.less"
 import {reqLogin} from "../../api/index"
 import {connect} from "react-redux"
